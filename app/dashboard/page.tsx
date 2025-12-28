@@ -1,14 +1,20 @@
-"use client";
-
 import CardApp from '@/components/app/card';
 import NavbarMenu from '@/components/app/navbar';
 import { ChartLineLinear } from '@/components/app/statistic/linear-chart';
 import { ChartPie } from '@/components/app/statistic/pie-chart';
 import ProbList from '@/components/app/statistic/prob-list';
 import AppTables from '@/components/app/table';
+import { adminDb } from '@/config/firebase-admin.init';
 import { FiStar, FiTrash, FiUserPlus, FiUsers } from 'react-icons/fi';
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  // fetch data server-side
+  const snapshot = await adminDb.collection("users").get();
+  const users = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
   return (
     <div className="min-h-screen bg-white">
       <NavbarMenu />
@@ -66,7 +72,7 @@ export default function Dashboard() {
       </div>
       {/* Table */}
       <div className="bg-white rounded-xl p-6 shadow border m-4">
-        <AppTables />
+        <AppTables data= {users} />
       </div>
     </div>
   );
