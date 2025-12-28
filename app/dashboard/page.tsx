@@ -71,8 +71,8 @@ export default async function Dashboard() {
           
           {/* Stats cards */}
           <div className="bg-gray-100 rounded-xl p-4 flex gap-4 justify-around">
-            <CardApp icon={<FiUsers color="#4e4db0" size={20} />} title="Total User" stat="24"/>
-            <CardApp icon={<FiTrash color="#4e4db0" size={20} />} title="Deleted Accounts" stat="5"/>
+            <CardApp icon={<FiUsers color="#4e4db0" size={20} />} title="Total User" stat={users.length}/>
+            <CardApp icon={<FiTrash color="#4e4db0" size={20} />} title="Deleted Accounts" stat="0"/>
             <CardApp icon={<FiStar color="#4e4db0" size={20} />} title="Rating" stat="4.2"/>
           </div>
 
