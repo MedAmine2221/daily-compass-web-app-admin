@@ -1,27 +1,29 @@
-"use client";
-
+"use client";;
 import { FiMail, FiLock } from "react-icons/fi";
 import AppInput from "../input";
 import { useRouter } from "next/navigation";
 import loginSchema from "@/schema/auth";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Input } from "@heroui/input";
+import { signIn } from "@/actions/auth";
+import { useDispatch } from "react-redux";
 
 export default function AuthForm() {
   const router = useRouter();
-
+  const dispatch = useDispatch()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const login = (e: any) => {
-    e.preventDefault();
-    router.push("/dashboard");
+  const submit = (data: any) => {
+    signIn({
+      email: data.email,
+      password: data.password
+    }, dispatch, router)  
   };
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver : yupResolver(loginSchema())
   });
   
   return (
-    <form onSubmit={handleSubmit(login)}>
+    <form onSubmit={handleSubmit(submit)}>
       <div className="flex flex-col items-center">
         <p className="text-[#4e4db0] font-bold text-3xl">
           USER LOGIN

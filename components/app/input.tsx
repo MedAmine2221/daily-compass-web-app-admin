@@ -46,7 +46,7 @@ export default function AppInput({
         }
         classNames={{
           label: "text-base",
-          input: "text-base",
+          input: "text-base text-black",
           errorMessage: "text-base",
           inputWrapper: "h-13",
         }}
