@@ -6,15 +6,28 @@ import ProbList from '@/components/app/statistic/prob-list';
 import AppTables from '@/components/app/table';
 import { adminDb } from '@/config/firebase-admin.init';
 import { FiStar, FiTrash, FiUserPlus, FiUsers } from 'react-icons/fi';
-
+type AppUser = {
+  id: string;
+  username: string;
+  phoneNumber: string;
+  lang: string;
+  imageUrl: string;
+  freePeriod: number;
+  createdAt: string;
+  address: string;
+  goals: any[];
+  validatedAccount: boolean;
+};
 export default async function Dashboard() {
   // fetch data server-side
   const snapshot = await adminDb.collection("users").get();
-  const users = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
+  const users = snapshot.docs.map((doc) => {
+    const data = doc.data() as Omit<AppUser, 'id'>;
+    return {
+      id: doc.id,
+      ...data,
+    };
+  }) as AppUser[];
   return (
     <div className="min-h-screen bg-white">
       <NavbarMenu />
@@ -66,13 +79,13 @@ export default async function Dashboard() {
           {/* Charts */}
           <div className="bg-gray-100 rounded-xl p-4 flex gap-4">
             <ChartLineLinear />
-            <ChartPie />
+            <ChartPie data={users} />
           </div>
         </div>
       </div>
       {/* Table */}
       <div className="bg-white rounded-xl p-6 shadow border m-4">
-        <AppTables data= {users} />
+        <AppTables data={users} />
       </div>
     </div>
   );

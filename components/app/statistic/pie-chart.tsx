@@ -2,26 +2,24 @@
 import { Cell, Pie, PieChart } from "recharts";
 
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import {
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-    type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
 } from "@/components/ui/chart";
+import { useMemo } from "react";
 
 export const description = "A pie chart with no separator"
 
-const chartData = [
-  { title: "Free Users", number: 40, fill: "#4e4db0" },
-  { title: "Paid Users", number: 60, fill: "#6b69d1" },
-]
+
 
 const chartConfig = {
   chrome: {
@@ -32,8 +30,31 @@ const chartConfig = {
   },
 
 } satisfies ChartConfig
-
-export function ChartPie() {
+type AppUser = {
+  id: string;
+  username: string;
+  phoneNumber: string;
+  lang: string;
+  imageUrl: string;
+  freePeriod: number;
+  createdAt: string;
+  address: string;
+  goals: any[];
+  validatedAccount: boolean;
+};
+export function ChartPie({ data }: { data: AppUser[] }) {
+  console.log("dataaaaaaaaaa ",data);
+  const pieData = useMemo(()=>{
+    const total = data.length;
+    const free = data.filter((item)=> item.freePeriod < 15).length;
+    const paid = data.filter((item)=> item.freePeriod >= 15).length;
+    return [
+      { title: "Free Users", number: Number(((free/total) *100).toFixed(1)), fill: "#4e4db0" },
+      { title: "Paid Users", number: Number(((paid/total) *100).toFixed(1)), fill: "#6b69d1" },
+    ]
+  },[data])
+  console.log("pieData ",pieData);
+  
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
@@ -52,12 +73,12 @@ export function ChartPie() {
             />
 
             <Pie
-                data={chartData}
+                data={pieData}
                 dataKey="number"
                 nameKey="title"
                 stroke="0"
             >
-                {chartData.map((entry, index) => (
+                {pieData.map((entry, index) => (
                     <Cell key={index} fill={entry.fill} />
                 ))}
             </Pie>
